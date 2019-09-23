@@ -1,4 +1,4 @@
-import { Controller, Get, Body } from '@nestjs/common';
+import { Controller, Get, Body, ValidationPipe } from '@nestjs/common';
 import { TvsService } from './tvs.service';
 import { SearchTvsDto } from './dto/search-tvs.dto';
 
@@ -9,7 +9,7 @@ export class TvsController {
   ) {}
 
   @Get('/search')
-  async searchTvs(@Body() searchTvsDto: SearchTvsDto): Promise<any> {
+  async searchTvs(@Body(ValidationPipe) searchTvsDto: SearchTvsDto): Promise<any> {
     return this.tvsService.searchTvs(searchTvsDto);
   }
 }
