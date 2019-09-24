@@ -8,7 +8,6 @@ export class MoviesController {
     private readonly moviesService: MoviesService,
   ) {}
 
-  // Add validation
   @Get('/search')
   async searchMovies(@Body(ValidationPipe) searchMoviesDto: SearchMoviesDto): Promise<any> {
     return this.moviesService.searchMovies(searchMoviesDto);

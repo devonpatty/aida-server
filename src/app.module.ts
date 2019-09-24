@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { MoviesModule } from './movies/movies.module';
@@ -6,6 +6,7 @@ import { WatchlistMoviesModule } from './watchlist-movies/watchlist-movies.modul
 import { AuthModule } from './auth/auth.module';
 import { WatchlistTvsModule } from './watchlist-tvs/watchlist-tvs.module';
 import { TvsModule } from './tvs/tvs.module';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -17,4 +18,10 @@ import { TvsModule } from './tvs/tvs.module';
     TvsModule,
   ],
 })
-export class AppModule {}
+export class AppModule /*implements NestModule*/ {
+  /*configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: 'movies/search', method: RequestMethod.GET })
+  }*/
+}
