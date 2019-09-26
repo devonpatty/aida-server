@@ -6,7 +6,6 @@ import { AuthFormDto } from './dto/auth-form.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt/jwt-payload.interface';
 import * as config from 'config';
-import { User } from 'src/entities/user.entity';
 
 const jwtConfig = config.get('jwt');
 
