@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Strategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
+import { Injectable, UnauthorizedException} from '@nestjs/common';
 import { JwtPayload } from './jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user.repository';
@@ -21,18 +21,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<User> {
-    const { username } = payload;
+  async validate(payload: JwtPayload, done: VerifiedCallback): Promise<User> {
+    const { username, iat, exp } = payload;
     const user = await this.userRepository.findOne({ username });
 
     if (!user) {
-      throw new UnauthorizedException();
+      return done(new UnauthorizedException(), false);
     }
 
     delete user.password;
     delete user.salt;
     delete user.email;
     
-    return user;
+    return done(null, user, iat);
   }
 }

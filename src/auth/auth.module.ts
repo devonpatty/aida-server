@@ -16,7 +16,7 @@ const jwtConfig = config.get('jwt');
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: jwtConfig.secret,
-        expiresIn: jwtConfig.expiresIn,
+        //expiresIn: jwtConfig.expiresIn,
       }),
     }),
     TypeOrmModule.forFeature([UserRepository]),

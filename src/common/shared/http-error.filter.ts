@@ -13,10 +13,8 @@ export class HttpErrorFilter implements ExceptionFilter {
 
     const errorResponse = {
       statusCode: status,
-      timestamp: new Date().toUTCString(),
-      path: request.url,
-      query: request.query,
-      body: request.body,
+      timestamp: new Date().toISOString(),
+      path: request ? request.url : null,
       method: request.method,
       message: exception.message.error || exception.message || null,
     };

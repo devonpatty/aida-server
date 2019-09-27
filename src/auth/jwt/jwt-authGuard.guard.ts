@@ -1,20 +1,11 @@
-import { Injectable, ExecutionContext } from "@nestjs/common";
+import { Injectable, ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { TokenExpiredError, decode, sign } from "jsonwebtoken";
 import { AuthGuard } from "@nestjs/passport";
-import { TokenExpiredError } from "jsonwebtoken";
+import * as config from 'config';
+
+const jwtConfig = config.get('jwt');
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log(context);
-    return true;
-  }
-
-  /*handleRequest(err, user, info: Error) {
-    console.warn(`all fine`);
-    if (err) {
-      console.error(`error:${err} user: ${JSON.stringify(user)} info: ${info}`);
-    }
-    return user;
-  }*/
 }
