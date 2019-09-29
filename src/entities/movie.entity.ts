@@ -18,9 +18,9 @@ export class Movie extends BaseEntity {
   @Column({ nullable: true })
   posterPath: string;
 
-  @Column()
+  @Column({ nullable: true })
   releaseDate: string;
 
-  @OneToMany(() => WatchlistMovie, watchlistMovie => watchlistMovie.movie, { eager: true })
+  @OneToMany(() => WatchlistMovie, watchlistMovie => watchlistMovie.movie)
   watchlistMovie: WatchlistMovie[];
 }

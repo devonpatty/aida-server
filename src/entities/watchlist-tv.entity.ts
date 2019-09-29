@@ -22,7 +22,7 @@ export class WatchlistTv extends BaseEntity {
   @Column()
   exEpisodeId: number;
 
-  @ManyToOne(() => Tv, tv => tv.watchlistTv, {eager: false })
+  @ManyToOne(() => Tv, tv => tv.watchlistTv)
   @JoinColumn({
     name: "exTvId",
     referencedColumnName: "exTvId",
@@ -32,7 +32,7 @@ export class WatchlistTv extends BaseEntity {
   @Column()
   exTvId: number;
 
-  @ManyToOne(() => User, user => user.watchlistTv, { eager: false })
+  @ManyToOne(() => User, user => user.watchlistTv)
   @JoinColumn({
     name: "userId",
     referencedColumnName: "userId"

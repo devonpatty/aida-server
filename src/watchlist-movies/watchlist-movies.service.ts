@@ -4,12 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WatchlistMovieRepository } from './watchlist-movies.reporitory';
 import { User } from '../entities/user.entity';
 import { WatchlistMovie } from '../entities/watchlist-movies.entity';
+import { MovieRepository } from '../movies/movies.repository';
 
 @Injectable()
 export class WatchlistMoviesService {
   constructor(
     @InjectRepository(WatchlistMovieRepository)
     private readonly watchlistMovieRepository: WatchlistMovieRepository,
+
+    @InjectRepository(MovieRepository)
+    private readonly movieRepository: MovieRepository,
   ) {}
 
   async getWatchlistMovies(user: User): Promise<WatchlistMovie[]> {
@@ -20,6 +24,14 @@ export class WatchlistMoviesService {
     addMovieDto: AddMovieDto,
     user: User,
   ): Promise<any> {
-    return this.watchlistMovieRepository.addWatchlistMovie(addMovieDto, user);
+    const movieExists = await this.watchlistMovieRepository.checkIfUserWatchedMovie(addMovieDto, user);
+    
+    if (!movieExists) {
+      await this.movieRepository.addMovie(addMovieDto);
+      const watchlist = await this.watchlistMovieRepository.addWatchlistMovie(addMovieDto, user);
+      return watchlist;
+    } else {
+      return { message: 'watched' };
+    }
   }
 }

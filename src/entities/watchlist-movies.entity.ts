@@ -13,7 +13,7 @@ export class WatchlistMovie extends BaseEntity {
   @Column({ nullable: true })
   hasWatched: boolean;
 
-  @ManyToOne(() => User, user => user.watchlistMovie, { eager: false })
+  @ManyToOne(() => User, user => user.watchlistMovie)
   @JoinColumn({
     name: "userId",
     referencedColumnName: "userId"
@@ -23,7 +23,7 @@ export class WatchlistMovie extends BaseEntity {
   @Column()
   userId: number;
 
-  @ManyToOne(() => Movie, movie => movie.watchlistMovie, { eager: false })
+  @ManyToOne(() => Movie, movie => movie.watchlistMovie)
   @JoinColumn({
     name: "exMovieId",
     referencedColumnName: "exMovieId"

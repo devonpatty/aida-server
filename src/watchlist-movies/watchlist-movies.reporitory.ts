@@ -13,6 +13,7 @@ export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
     const query = this.createQueryBuilder('watchlistmovies');
 
     query.where('watchlistmovies.userId = :userId', { userId: user.userId });
+    query.leftJoinAndSelect('watchlistmovies.movie', 'movie');
     // Do something here
 
     try {
@@ -24,54 +25,45 @@ export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
     }
   }
 
+  async checkIfUserWatchedMovie(addMovieDto: AddMovieDto, user: User): Promise<boolean> {
+    const { exMovieId } = addMovieDto;
+    const { userId } = user;
+    const query = this.createQueryBuilder('watchlistmovie');
+
+    query
+      .leftJoinAndSelect('watchlistmovie.movie', 'movie')
+      .where('watchlistmovie.exMovieId = :exMovieId', { exMovieId })
+      .andWhere('watchlistmovie.userId = :userId', { userId });
+
+    try {
+      const exists = await query.getOne();
+      return exists ? true : false;
+    } catch(error) {
+
+    }
+  }
+
   async addWatchlistMovie(
     addMovieDto: AddMovieDto,
     user: User,
   ): Promise<any> {
-    const { exMovieId, title, overview, posterPath, releaseDate } = addMovieDto;
-
-    // Maybe move the validateMovie to the service
-    if (await this.validateMovie(addMovieDto)) {
-      this.logger.error(`"${title}" exists in Movies entity with exMovieId: "${exMovieId}" associated username: "${user.username}", userId: "${user.userId}"`);
-      return { message: 'The movies is already exists' };
-    } else {
-      const movie = new Movie();
-      movie.exMovieId = exMovieId;
-      movie.title = title;
-      movie.overview = overview;
-      movie.posterPath = posterPath;
-      movie.releaseDate = releaseDate;
-  
-      const watchlistMovie = new WatchlistMovie();
-      watchlistMovie.addedDate = new Date();
-      watchlistMovie.user = user;
-      watchlistMovie.movie = movie;
-  
-      try {
-        await movie.save();
-        await watchlistMovie.save();
-      } catch (error) {
-        this.logger.error(`Failed to create watchlist ${error.code}`, error.stack);
-        throw new InternalServerErrorException();
-      }
-  
-      delete watchlistMovie.user;
-  
-      return watchlistMovie;
-    }
-  }
-
-  async validateMovie(addMovieDto: AddMovieDto): Promise<boolean> {
     const { exMovieId } = addMovieDto;
-    const query = this.createQueryBuilder('watchlistmovie');
 
-    query.leftJoinAndSelect('watchlistmovie.movie', 'movies')
-          .where('watchlistmovie.exMovieId = :exMovieId', { exMovieId });
+    const watchlistMovie = new WatchlistMovie();
+    watchlistMovie.addedDate = new Date();
+    watchlistMovie.hasWatched = true;
+    watchlistMovie.user = user;
+    watchlistMovie.exMovieId = exMovieId;
 
-    const movie = await query.getOne();
-    if (movie) {
-      return true;
+    try {
+      await watchlistMovie.save();
+    } catch (error) {
+      this.logger.error(`Failed to create watchlist ${error.code}`, error.stack);
+      throw new InternalServerErrorException();
     }
-    return false;
+
+    delete watchlistMovie.user;
+
+    return watchlistMovie;
   }
 }

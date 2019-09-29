@@ -10,11 +10,11 @@ export class AddMovieDto {
     readonly title: string;
 
     @IsString()
-    readonly overview: string;
+    readonly overview?: string;
 
     @IsString()
-    readonly posterPath: string;
+    readonly posterPath?: string;
 
     @IsDateString()
-    readonly releaseDate: string;
+    readonly releaseDate?: string;
 }

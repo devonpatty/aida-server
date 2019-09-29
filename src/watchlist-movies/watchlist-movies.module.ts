@@ -4,11 +4,12 @@ import { WatchlistMoviesService } from './watchlist-movies.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WatchlistMovieRepository } from './watchlist-movies.reporitory';
 import { AuthModule } from '../auth/auth.module';
+import { MovieRepository } from '../movies/movies.repository';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([WatchlistMovieRepository]),
+    TypeOrmModule.forFeature([WatchlistMovieRepository, MovieRepository]),
   ],
   controllers: [WatchlistMoviesController],
   providers: [WatchlistMoviesService]

@@ -21,10 +21,10 @@ export class User extends BaseEntity {
   @Column()
   salt: string;
 
-  @OneToMany(() => WatchlistMovie, watchlistMovie => watchlistMovie.user, { eager: true })
+  @OneToMany(() => WatchlistMovie, watchlistMovie => watchlistMovie.user)
   watchlistMovie: WatchlistMovie[];
 
-  @OneToMany(() => WatchlistTv, watchlistTv => watchlistTv.user, { eager: true })
+  @OneToMany(() => WatchlistTv, watchlistTv => watchlistTv.user)
   watchlistTv: WatchlistTv[];
 
   async validatePassword(password: string): Promise<boolean> {
