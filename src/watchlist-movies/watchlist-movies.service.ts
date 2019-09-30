@@ -34,4 +34,11 @@ export class WatchlistMoviesService {
       return { message: 'watched' };
     }
   }
+
+  async deleteWatchlistMovie(
+    user: User,
+    id: number,
+  ): Promise<any> {
+    return this.watchlistMovieRepository.deleteWatchlistMovie(user, id);
+  }
 }

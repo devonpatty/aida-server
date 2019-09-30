@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from "typeorm";
 import { WatchlistMovie } from "../entities/watchlist-movies.entity";
-import { Logger, InternalServerErrorException } from "@nestjs/common";
+import { Logger, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { AddMovieDto } from "../movies/dto/add-movie.dto";
 import { User } from "../entities/user.entity";
 
@@ -74,5 +74,16 @@ export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
     delete watchlistMovie.user;
 
     return watchlistMovie;
+  }
+
+  async deleteWatchlistMovie(user: User, id: number): Promise<any> {
+    const { userId } = user;
+    const del = await this.delete({ userId, exMovieId: id });
+
+    if (del.affected === 0) {
+      throw new NotFoundException(`Movie ${id} not found`);
+    }
+
+    return del;
   }
 }
