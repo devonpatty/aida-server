@@ -12,9 +12,6 @@ export class MoviesService {
 
   private readonly logger = new Logger(MoviesService.name);
 
-  // look up for catchError with Observable
-  // repository communitation level vs service communication
-
   async searchMovies(searchMoviesDto: SearchMoviesDto): Promise<any> {
     const { search } = searchMoviesDto;
     let result;

@@ -5,10 +5,6 @@ import { AddTvDto } from "../tvs/dto/add-tv.dto";
 import { WatchlistTv } from "../entities/watchlist-tv.entity";
 import { User } from "../entities/user.entity";
 
-/**
- * reprogramm the watchlistTvEntity
- */
-
 @EntityRepository(WatchlistTv)
 export class WatchlistTvRepository extends Repository<WatchlistTv> {
   private logger = new Logger(WatchlistTvRepository.name);
@@ -28,57 +24,54 @@ export class WatchlistTvRepository extends Repository<WatchlistTv> {
     }
   }
 
+  // also check for exEpisodeId and seasonNumber
+  async checkIfUserWatchedTv(addTvDto: AddTvDto, user: User): Promise<boolean> {
+    const { exTvId, exSeasonId, exEpisodeId, seasonNumber } = addTvDto;
+    const { userId } = user;
+    const query = this.createQueryBuilder('watchlisttv');
+
+    // too many checking ??
+    query
+      .leftJoinAndSelect('watchlisttv.tv', 'tv')
+      .where('watchlisttv.exTvId = :exTvId', { exTvId })
+      .andWhere('watchlisttv.userId = :userId', { userId })
+      .andWhere('watchlisttv.exSeasonId = :exSeasonId', { exSeasonId})
+      .andWhere('watchlisttv.exEpisodeId = :exEpisodeId', { exEpisodeId })
+      .andWhere('watchlisttv.seasonNumber = :seasonNumber', { seasonNumber });
+
+    try {
+      const exists = await query.getOne();
+      return exists ? true : false;
+    } catch (error) {
+      // some error handling here...
+    }
+  }
+
   async addWatchlistTv(
     addTvDto: AddTvDto,
     user: User,
   ): Promise<any> {
-    const { exTvId, title, overview, posterPath, releaseDate, exSeasonId, seasonNumber, exEpisodeId } = addTvDto;
-
-    if (await this.validateTv(addTvDto)) {
-      this.logger.error(`"${title}" exists in Tvs entity with exTvId: "${exTvId}" associated username: "${user.username}", userId: "${user.userId}"`);
-      return { message: 'The Tv is already exists'};
-    } else {
-      const tv = new Tv();
-      tv.exTvId = exTvId;
-      tv.title = title;
-      tv.overview = overview;
-      tv.posterPath = posterPath;
-      tv.releaseDate = releaseDate;
+    const { exTvId, exSeasonId, seasonNumber, exEpisodeId } = addTvDto;
+    
   
-      const watchlistTv = new WatchlistTv();
-      watchlistTv.hasWatched = true;
-      watchlistTv.addedDate = new Date();
-      watchlistTv.exSeasonId = exSeasonId;
-      watchlistTv.seasonNumber = seasonNumber;
-      watchlistTv.exEpisodeId = exEpisodeId;
-      watchlistTv.user = user;
-      watchlistTv.tv = tv;
-      
-      try {
-        await tv.save();
-        await watchlistTv.save();
-      } catch (error) {
-        this.logger.error(`Failed to create watchlist ${error.code}`, error.stack);
-        throw new InternalServerErrorException();
-      }
-  
-      delete watchlistTv.user;
-  
-      return watchlistTv;
+    const watchlistTv = new WatchlistTv();
+    watchlistTv.hasWatched = true;
+    watchlistTv.addedDate = new Date();
+    watchlistTv.exTvId = exTvId;
+    watchlistTv.exSeasonId = exSeasonId;
+    watchlistTv.seasonNumber = seasonNumber;
+    watchlistTv.exEpisodeId = exEpisodeId;
+    watchlistTv.user = user;
+    
+    try {
+      await watchlistTv.save();
+    } catch (error) {
+      this.logger.error(`Failed to create watchlist ${error.code}`, error.stack);
+      throw new InternalServerErrorException();
     }
-  }
 
-  async validateTv(addTvDto: AddTvDto): Promise<boolean> {
-    const { exTvId } = addTvDto;
-    const query = this.createQueryBuilder('watchlisttv');
+    delete watchlistTv.user;
 
-    query.leftJoinAndSelect('watchlisttv.tv', 'tv')
-            .where('watchlisttv.exTvId = :exTvId', { exTvId });
-
-    const tv = await query.getOne();
-    if (tv) {
-      return true;
-    }
-    return false;
+    return watchlistTv;
   }
 }

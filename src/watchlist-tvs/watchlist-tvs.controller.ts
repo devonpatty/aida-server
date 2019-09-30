@@ -20,6 +20,8 @@ export class WatchlistTvsController {
     return this.watchlistTvsService.getWatchlistTv(user);
   }
 
+
+  // need validation of tv seasonnumber and alsothe 
   @Post()
   async addWatchlistTv(
     @Body() addTvDto: AddTvDto,

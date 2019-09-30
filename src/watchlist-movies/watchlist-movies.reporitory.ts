@@ -2,12 +2,11 @@ import { EntityRepository, Repository } from "typeorm";
 import { WatchlistMovie } from "../entities/watchlist-movies.entity";
 import { Logger, InternalServerErrorException } from "@nestjs/common";
 import { AddMovieDto } from "../movies/dto/add-movie.dto";
-import { Movie } from "../entities/movie.entity";
 import { User } from "../entities/user.entity";
 
 @EntityRepository(WatchlistMovie)
 export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
-  private logger = new Logger('WatchlistMovieRepository');
+  private logger = new Logger(WatchlistMovieRepository.name);
 
   async getWatchlistMovies(user: User): Promise<WatchlistMovie[]> {
     const query = this.createQueryBuilder('watchlistmovies');
@@ -39,7 +38,7 @@ export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
       const exists = await query.getOne();
       return exists ? true : false;
     } catch(error) {
-
+      // some error handling here ...
     }
   }
 
