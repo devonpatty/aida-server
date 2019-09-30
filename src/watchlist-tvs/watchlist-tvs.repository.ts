@@ -9,15 +9,25 @@ import { User } from "../entities/user.entity";
 export class WatchlistTvRepository extends Repository<WatchlistTv> {
   private logger = new Logger(WatchlistTvRepository.name);
 
-  async getWatchlistTv(user: User): Promise<WatchlistTv[]> {
+  async getWatchlistTv(user: User, page: number = 1): Promise<WatchlistTv[]> {
+    const { userId } = user;
+    /*
     const query = this.createQueryBuilder('watchlisttvs');
-
+    
     query.where('watchlisttvs.userId = :userId', { userId: user.userId });
     query.leftJoinAndSelect('watchlisttvs.tv', 'tv');
-
+    */
     try {
-      const tv = await query.getMany();
-      return tv;
+      const watchlistTv = await this.find({
+        relations: ['tv'],
+        where: { userId },
+        order: {
+          addedDate: "DESC", // newest first
+        },
+        take: 10,
+        skip: 10 * (page - 1)
+      });
+      return watchlistTv;
     } catch (error) {
       this.logger.error(`Failed to get tv`, error.stack);
       throw new InternalServerErrorException();
