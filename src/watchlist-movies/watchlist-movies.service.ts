@@ -16,8 +16,8 @@ export class WatchlistMoviesService {
     private readonly movieRepository: MovieRepository,
   ) {}
 
-  async getWatchlistMovies(user: User): Promise<WatchlistMovie[]> {
-    return this.watchlistMovieRepository.getWatchlistMovies(user);
+  async getWatchlistMovies(user: User, page: number): Promise<WatchlistMovie[]> {
+    return this.watchlistMovieRepository.getWatchlistMovies(user, page);
   }
 
   async addWatchlistMovie(

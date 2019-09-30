@@ -8,15 +8,25 @@ import { User } from "../entities/user.entity";
 export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
   private logger = new Logger(WatchlistMovieRepository.name);
 
-  async getWatchlistMovies(user: User): Promise<WatchlistMovie[]> {
-    const query = this.createQueryBuilder('watchlistmovies');
+  async getWatchlistMovies(user: User, page: number = 1): Promise<WatchlistMovie[]> {
+    const { userId } = user;
+    /*const query = this.createQueryBuilder('watchlistmovies');
 
-    query.where('watchlistmovies.userId = :userId', { userId: user.userId });
-    query.leftJoinAndSelect('watchlistmovies.movie', 'movie');
-    // Do something here
-
+    // add pagination || limit, offset
+    query
+      .where('watchlistmovies.userId = :userId', { userId: user.userId })
+      .leftJoinAndSelect('watchlistmovies.movie', 'movie');
+    */
     try {
-      const watchlistMovies = await query.getMany();
+      const watchlistMovies = await this.find({
+        relations: ['movie'],
+        where: { userId },
+        order: {
+          addedDate: "DESC", // newest first
+        },
+        take: 10,
+        skip: 10 * (page - 1),
+      });
       return watchlistMovies;
     } catch (error) {
       this.logger.error(`Failed to get watchlist movies`, error.stack);

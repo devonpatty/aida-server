@@ -1,4 +1,4 @@
-import { Controller, Logger, Post, Body, Get, UseGuards } from '@nestjs/common';
+import { Controller, Logger, Post, Body, Get, UseGuards, Query } from '@nestjs/common';
 import { WatchlistMoviesService } from './watchlist-movies.service';
 import { AddMovieDto } from '../movies/dto/add-movie.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,8 +17,11 @@ export class WatchlistMoviesController {
   ) {}
 
   @Get()
-  async getWatchlistMovies(@GetUser() user: User): Promise<WatchlistMovie[]> {
-    return this.watchlistMovieService.getWatchlistMovies(user);
+  async getWatchlistMovies(
+    @Query('page') page: number,
+    @GetUser() user: User
+  ): Promise<WatchlistMovie[]> {
+    return this.watchlistMovieService.getWatchlistMovies(user, page);
   } 
 
   @Post()
