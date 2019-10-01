@@ -13,4 +13,8 @@ export class MoviesController {
     return this.moviesService.searchMovies(searchMoviesDto);
   }
   
+  @Get('/popular')
+  async popuplarMovies(): Promise<any> {
+    return this.moviesService.popularMovies();
+  }
 }

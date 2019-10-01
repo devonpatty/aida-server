@@ -23,4 +23,13 @@ export class MoviesService {
       this.logger.error(error);
     }
   }
+
+  async popularMovies(): Promise<any> {
+    try {
+      const result = await this.httpService.get(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1&include_adult=false`).toPromise();
+      return result.data;
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
 }

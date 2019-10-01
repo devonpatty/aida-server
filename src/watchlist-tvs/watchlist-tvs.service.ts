@@ -18,7 +18,7 @@ export class WatchlistTvsService {
   ) {}
 
   async getWatchlistTv(user: User, page: number): Promise<WatchlistTv[]> {
-    const watchlistTv = await this.watchlistTvRepository.getWatchlistTv(user, number);
+    const watchlistTv = await this.watchlistTvRepository.getWatchlistTv(user, page);
 
     return watchlistTv;
   }
