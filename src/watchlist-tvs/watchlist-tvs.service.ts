@@ -37,4 +37,11 @@ export class WatchlistTvsService {
       return { message: 'watched' };
     }
   }
+
+  async deleteWatchlistTv(
+    user: User,
+    query: any,
+  ): Promise<any> {
+    return this.watchlistTvRepository.deleteWatchlistTv(user, query);
+  }
 }

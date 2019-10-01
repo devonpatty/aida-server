@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from "typeorm";
 import { Tv } from "../entities/tv.entity";
-import { Logger, InternalServerErrorException } from "@nestjs/common";
+import { Logger, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { AddTvDto } from "../tvs/dto/add-tv.dto";
 import { WatchlistTv } from "../entities/watchlist-tv.entity";
 import { User } from "../entities/user.entity";
@@ -83,5 +83,20 @@ export class WatchlistTvRepository extends Repository<WatchlistTv> {
     delete watchlistTv.user;
 
     return watchlistTv;
+  }
+
+  async deleteWatchlistTv(
+    user: User,
+    query: any,
+  ): Promise<any> {
+    const { userId } = user;
+    const { exTvId, exSeasonId, seasonNumber, exEpisodeId } = query;
+    const del = await this.delete({ userId, exTvId, exSeasonId, seasonNumber, exEpisodeId });
+
+    if (del.affected === 0) {
+      throw new NotFoundException();
+    }
+
+    return del;
   }
 }
