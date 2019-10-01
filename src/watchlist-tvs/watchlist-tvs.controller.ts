@@ -1,4 +1,4 @@
-import { Controller, Logger, Post, Body, UseGuards, Get, Delete } from '@nestjs/common';
+import { Controller, Logger, Post, Body, UseGuards, Get, Delete, Query, ParseIntPipe } from '@nestjs/common';
 import { WatchlistTvsService } from './watchlist-tvs.service';
 import { AddTvDto } from '../tvs/dto/add-tv.dto';
 import { GetUser } from '../auth/deco/get-user.decorator';
@@ -17,8 +17,11 @@ export class WatchlistTvsController {
   ) {}
 
   @Get()
-  async getWatchlistTv(@GetUser() user: User): Promise<WatchlistTv[]> {
-    return this.watchlistTvsService.getWatchlistTv(user);
+  async getWatchlistTv(
+    @Query('page', ParseIntPipe) page: number,
+    @GetUser() user: User
+  ): Promise<WatchlistTv[]> {
+    return this.watchlistTvsService.getWatchlistTv(user, page);
   }
 
   @Post()

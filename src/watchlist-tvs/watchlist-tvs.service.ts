@@ -17,8 +17,8 @@ export class WatchlistTvsService {
     private readonly tvRepository: TvRepository,
   ) {}
 
-  async getWatchlistTv(user: User): Promise<WatchlistTv[]> {
-    const watchlistTv = await this.watchlistTvRepository.getWatchlistTv(user);
+  async getWatchlistTv(user: User, page: number): Promise<WatchlistTv[]> {
+    const watchlistTv = await this.watchlistTvRepository.getWatchlistTv(user, number);
 
     return watchlistTv;
   }

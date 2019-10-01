@@ -12,12 +12,7 @@ export class WatchlistTvRepository extends Repository<WatchlistTv> {
 
   async getWatchlistTv(user: User, page: number = 1): Promise<WatchlistTv[]> {
     const { userId } = user;
-    /*
-    const query = this.createQueryBuilder('watchlisttvs');
-    
-    query.where('watchlisttvs.userId = :userId', { userId: user.userId });
-    query.leftJoinAndSelect('watchlisttvs.tv', 'tv');
-    */
+
     try {
       const watchlistTv = await this.find({
         relations: ['tv'],

@@ -10,13 +10,7 @@ export class WatchlistMovieRepository extends Repository<WatchlistMovie> {
 
   async getWatchlistMovies(user: User, page: number = 1): Promise<WatchlistMovie[]> {
     const { userId } = user;
-    /*const query = this.createQueryBuilder('watchlistmovies');
 
-    // add pagination || limit, offset
-    query
-      .where('watchlistmovies.userId = :userId', { userId: user.userId })
-      .leftJoinAndSelect('watchlistmovies.movie', 'movie');
-    */
     try {
       const watchlistMovies = await this.find({
         relations: ['movie'],
