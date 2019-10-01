@@ -5,6 +5,7 @@ import { AddTvDto } from '../tvs/dto/add-tv.dto';
 import { User } from '../entities/user.entity';
 import { WatchlistTv } from '../entities/watchlist-tv.entity';
 import { TvRepository } from '../tvs/tvs.repository';
+import { WatchlistTvDto } from './dto/watchlist-tv.dto';
 
 @Injectable()
 export class WatchlistTvsService {
@@ -40,8 +41,8 @@ export class WatchlistTvsService {
 
   async deleteWatchlistTv(
     user: User,
-    query: any,
+    watchlistTvDto: WatchlistTvDto,
   ): Promise<any> {
-    return this.watchlistTvRepository.deleteWatchlistTv(user, query);
+    return this.watchlistTvRepository.deleteWatchlistTv(user, watchlistTvDto);
   }
 }

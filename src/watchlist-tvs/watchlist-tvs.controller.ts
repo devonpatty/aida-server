@@ -1,10 +1,11 @@
-import { Controller, Logger, Post, Body, UseGuards, Get, Delete, Param, Query } from '@nestjs/common';
+import { Controller, Logger, Post, Body, UseGuards, Get, Delete } from '@nestjs/common';
 import { WatchlistTvsService } from './watchlist-tvs.service';
 import { AddTvDto } from '../tvs/dto/add-tv.dto';
 import { GetUser } from '../auth/deco/get-user.decorator';
 import { User } from '../entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { WatchlistTv } from "../entities/watchlist-tv.entity";
+import { WatchlistTvDto } from './dto/watchlist-tv.dto';
 
 @Controller('watchlisttvs')
 @UseGuards(AuthGuard())
@@ -20,8 +21,6 @@ export class WatchlistTvsController {
     return this.watchlistTvsService.getWatchlistTv(user);
   }
 
-
-  // need validation of tv seasonnumber and alsothe 
   @Post()
   async addWatchlistTv(
     @Body() addTvDto: AddTvDto,
@@ -32,9 +31,9 @@ export class WatchlistTvsController {
 
   @Delete()
   async deleteWatchlistTv(
-    @Query() query: any,
+    @Body() watchlistTvDto: WatchlistTvDto,
     @GetUser() user: User,
   ): Promise<any> {
-    return this.watchlistTvsService.deleteWatchlistTv(user, query);
+    return this.watchlistTvsService.deleteWatchlistTv(user, watchlistTvDto);
   }
 }

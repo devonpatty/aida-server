@@ -4,6 +4,7 @@ import { Logger, InternalServerErrorException, NotFoundException } from "@nestjs
 import { AddTvDto } from "../tvs/dto/add-tv.dto";
 import { WatchlistTv } from "../entities/watchlist-tv.entity";
 import { User } from "../entities/user.entity";
+import { WatchlistTvDto } from "./dto/watchlist-tv.dto";
 
 @EntityRepository(WatchlistTv)
 export class WatchlistTvRepository extends Repository<WatchlistTv> {
@@ -87,10 +88,10 @@ export class WatchlistTvRepository extends Repository<WatchlistTv> {
 
   async deleteWatchlistTv(
     user: User,
-    query: any,
+    watchlistTvDto: WatchlistTvDto,
   ): Promise<any> {
     const { userId } = user;
-    const { exTvId, exSeasonId, seasonNumber, exEpisodeId } = query;
+    const { exTvId, exSeasonId, seasonNumber, exEpisodeId } = watchlistTvDto;
     const del = await this.delete({ userId, exTvId, exSeasonId, seasonNumber, exEpisodeId });
 
     if (del.affected === 0) {

@@ -1,4 +1,4 @@
-import { Controller, Logger, Post, Body, Get, UseGuards, Query, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Logger, Post, Body, Get, UseGuards, Query, Delete, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { WatchlistMoviesService } from './watchlist-movies.service';
 import { AddMovieDto } from '../movies/dto/add-movie.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,7 +18,7 @@ export class WatchlistMoviesController {
 
   @Get()
   async getWatchlistMovies(
-    @Query('page') page: number,
+    @Query('page', ParseIntPipe) page: number,
     @GetUser() user: User
   ): Promise<WatchlistMovie[]> {
     return this.watchlistMovieService.getWatchlistMovies(user, page);

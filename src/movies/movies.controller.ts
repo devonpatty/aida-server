@@ -1,4 +1,4 @@
-import { Controller, Get, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { SearchMoviesDto } from './dto/search-movies.dto';
 
@@ -8,8 +8,9 @@ export class MoviesController {
     private readonly moviesService: MoviesService,
   ) {}
 
-  @Get('/search')
-  async searchMovies(@Body(ValidationPipe) searchMoviesDto: SearchMoviesDto): Promise<any> {
+  @Get()
+  async searchMovies(@Query(ValidationPipe) searchMoviesDto: SearchMoviesDto): Promise<any> {
     return this.moviesService.searchMovies(searchMoviesDto);
   }
+  
 }
