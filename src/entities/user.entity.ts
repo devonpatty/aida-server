@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany, BeforeInsert } from "typeorm";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { WatchlistMovie } from "./watchlist-movies.entity";
 import { WatchlistTv } from "./watchlist-tv.entity";
 

@@ -16,7 +16,7 @@ async function bootstrap() {
     app.enableCors();
   } else {
     app.enableCors({ origin: serverConfig.origin });
-    logger.log(`origin: ${serverConfig.origin}`);
+    logger.log(`origin: ${serverConfig.origin}`); // logging
   }
   
   app.use(helmet());
