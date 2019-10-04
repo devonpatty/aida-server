@@ -1,4 +1,4 @@
-import { Controller, Logger, Post, Body, UseGuards, Get, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Logger, Post, Body, UseGuards, Get, Delete, Query, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { WatchlistTvsService } from './watchlist-tvs.service';
 import { AddTvDto } from '../tvs/dto/add-tv.dto';
 import { GetUser } from '../auth/deco/get-user.decorator';
@@ -26,7 +26,7 @@ export class WatchlistTvsController {
 
   @Post()
   async addWatchlistTv(
-    @Body() addTvDto: AddTvDto,
+    @Body(ValidationPipe) addTvDto: AddTvDto,
     @GetUser() user: User,
   ): Promise<any> {
     return this.watchlistTvsService.addWatchlistTv(addTvDto, user);

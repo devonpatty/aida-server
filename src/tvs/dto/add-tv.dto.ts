@@ -1,9 +1,9 @@
 import { IsNumber, IsPositive, IsNotEmpty, IsString, IsDateString } from "class-validator";
 
 export class AddTvDto {
-  @IsNumber()
-  @IsPositive()
-  @IsNotEmpty()
+  @IsNumber({ allowNaN: false }, { message: 'The value has to be number' })
+  @IsPositive({ message: 'The number has to be positive' })
+  @IsNotEmpty({ message: 'The field is required' })
   readonly exTvId: number;
 
   @IsString()

@@ -20,8 +20,8 @@ async function bootstrap() {
   }
   
   app.use(helmet());
-  app.useGlobalFilters(new HttpErrorFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  //app.useGlobalFilters(new HttpErrorFilter());
+  //app.useGlobalInterceptors(new LoggingInterceptor());
 
 
   const port = process.env.PORT || serverConfig.port;
