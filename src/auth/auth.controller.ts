@@ -1,7 +1,8 @@
-import { Controller, Post, Body, ValidationPipe, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Get, Req, Res, Header } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthService } from './auth.service';
 import { AuthFormDto } from './dto/auth-form.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -10,16 +11,24 @@ export class AuthController {
   ) {}
 
   @Post('/signup')
-  signUp(
+  async signUp(
     @Body(ValidationPipe) authFormDto: AuthFormDto,
   ): Promise<void> {
     return this.authService.signUp(authFormDto);
   }
 
   @Post('/signin')
-  signIn(
+  async signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+    @Res() res: Response,
   ): Promise<any> {
-    return this.authService.signIn(authCredentialsDto);
+    const { accessToken, refreshToken } = await this.authService.signIn(authCredentialsDto);
+    res.cookie(
+      'jid',
+      refreshToken,
+      { httpOnly: true },
+    );
+
+    return res.json({ accessToken });
   }
 }

@@ -6,6 +6,7 @@ import { LoggingInterceptor } from './common/shared/logging.interceptor';
 
 import * as helmet from 'helmet';
 import * as config from 'config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const serverConfig = config.get('server');
@@ -19,6 +20,7 @@ async function bootstrap() {
     logger.log(`origin: ${serverConfig.origin}`); // logging
   }
   
+  app.use(cookieParser());
   app.use(helmet());
   //app.useGlobalFilters(new HttpErrorFilter());
   //app.useGlobalInterceptors(new LoggingInterceptor());

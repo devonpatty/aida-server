@@ -7,5 +7,19 @@ const jwtConfig = config.get('jwt');
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    console.log(request);
+    const result = (await super.canActivate(context) as boolean);
+    await super.logIn(request);
+    console.log(result);
+    return result;
+  }
 
+  handleRequest(err, user, info) {
+    if (err || !user) {
+      throw err || new UnauthorizedException();
+    }
+    return user;
+  }
 }

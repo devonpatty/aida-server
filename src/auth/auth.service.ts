@@ -35,14 +35,19 @@ export class AuthService {
     }
 
     const payload: JwtPayload = { username };
-    const [token] = await this.createTokens(payload);
-
-    return { token };
+    const accessToken = await this.createAccessTokens(payload);
+    const refreshToken = await this.createRefreshToken(payload);
+    
+    return { accessToken, refreshToken };
   }
 
-  async createTokens(payload: JwtPayload): Promise<any> {
-    const createToken = sign(payload, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
-    //const createRefreshToken = sign(payload, jwtConfig.secret, { expiresIn: jwtConfig.refreshToken });
-    return Promise.all([createToken]);
+  async createAccessTokens(payload: JwtPayload): Promise<any> {
+    const accessToken = sign(payload, jwtConfig.accessTokenSecret, { expiresIn: jwtConfig.expiresIn });
+    return accessToken;
+  }
+
+  async createRefreshToken(payload: JwtPayload): Promise<any> {
+    const refreshToken = sign(payload, jwtConfig.refreshTokenSecret, { expiresIn: jwtConfig.refreshToken });
+    return refreshToken;
   }
 }
