@@ -36,6 +36,7 @@ export class UserRepository extends Repository<User> {
     const toResponse = {
       userId: user.userId,
       username: username,
+      tokenVersion: user.tokenVersion,
     };
 
     if (user && await user.validatePassword(password)) {
@@ -43,6 +44,12 @@ export class UserRepository extends Repository<User> {
     } else {
       return null;
     }
+  }
+
+  // TO DO implement incrementTokenVersion
+  async incrementTokenVersion(userId): Promise<boolean> {
+    await this.increment({ userId }, 'tokenVersion', 1);
+    return true;
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

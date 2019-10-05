@@ -1,6 +1,7 @@
 export class JwtPayload {
-  readonly userId: number;
-  readonly username: string;
-  readonly iat?: Date;
-  readonly exp?: Date;
+  userId: number;
+  username: string;
+  iat?: Date;
+  exp?: Date;
+  tokenVersion?: number;
 }

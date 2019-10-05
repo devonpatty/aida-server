@@ -15,7 +15,7 @@ const jwtConfig = config.get('jwt');
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: () => ({
-        secret: jwtConfig.secret,
+        secret: jwtConfig.accessTokenSecret,
         //expiresIn: jwtConfig.expiresIn,
       }),
     }),

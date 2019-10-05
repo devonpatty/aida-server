@@ -21,6 +21,9 @@ export class User extends BaseEntity {
   @Column()
   salt: string;
 
+  @Column("int", { default: 0 })
+  tokenVersion: number;
+
   @OneToMany(() => WatchlistMovie, watchlistMovie => watchlistMovie.user)
   watchlistMovie: WatchlistMovie[];
 

@@ -21,9 +21,9 @@ async function bootstrap() {
   }
   
   app.use(helmet());
-  app.use(cookieParser());
+  app.use('/auth/refresh_token', cookieParser());
 
-  app.useGlobalFilters(new HttpErrorFilter());
+  //app.useGlobalFilters(new HttpErrorFilter());
   //app.useGlobalInterceptors(new LoggingInterceptor());
 
 

@@ -18,23 +18,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || jwtConfig.secret,
+      secretOrKey: process.env.JWT_SECRET || jwtConfig.accessTokenSecret,
     });
   }
 
   async validate(payload: JwtPayload): Promise<User> {
     const { userId, iat, exp } = payload;
-    console.log(payload);
     const user = await this.userRepository.findOne({ userId });
+    
+    delete user.password;
+    delete user.salt;
+    delete user.email;
 
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    delete user.password;
-    delete user.salt;
-    delete user.email;
-    
     return user;
   }
 }
