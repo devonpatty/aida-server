@@ -20,9 +20,10 @@ async function bootstrap() {
     logger.log(`origin: ${serverConfig.origin}`); // logging
   }
   
-  app.use(cookieParser());
   app.use(helmet());
-  //app.useGlobalFilters(new HttpErrorFilter());
+  app.use(cookieParser());
+
+  app.useGlobalFilters(new HttpErrorFilter());
   //app.useGlobalInterceptors(new LoggingInterceptor());
 
 

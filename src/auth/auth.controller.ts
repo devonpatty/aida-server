@@ -20,15 +20,14 @@ export class AuthController {
   @Post('/signin')
   async signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-    @Res() res: Response,
+    //@Res() res: Response,
   ): Promise<any> {
-    const { accessToken, refreshToken } = await this.authService.signIn(authCredentialsDto);
-    res.cookie(
+    return this.authService.signIn(authCredentialsDto);
+    /*res.cookie(
       'jid',
       refreshToken,
       { httpOnly: true },
-    );
+    );*/
 
-    return res.json({ accessToken });
   }
 }

@@ -28,13 +28,13 @@ export class AuthService {
   }
 
   async signIn(authCredentialsDto: AuthCredentialsDto): Promise<any> {
-    const username = await this.userRepository.validateUserPassword(authCredentialsDto);
+    const user = await this.userRepository.validateUserPassword(authCredentialsDto);
 
-    if (!username) {
+    if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: JwtPayload = { username };
+    const payload: JwtPayload = { userId: user.userId, username: user.username };
     const accessToken = await this.createAccessTokens(payload);
     const refreshToken = await this.createRefreshToken(payload);
     
@@ -42,12 +42,12 @@ export class AuthService {
   }
 
   async createAccessTokens(payload: JwtPayload): Promise<any> {
-    const accessToken = sign(payload, jwtConfig.accessTokenSecret, { expiresIn: jwtConfig.expiresIn });
+    const accessToken = await sign(payload, jwtConfig.secret, { expiresIn: jwtConfig.accessToken });
     return accessToken;
   }
 
   async createRefreshToken(payload: JwtPayload): Promise<any> {
-    const refreshToken = sign(payload, jwtConfig.refreshTokenSecret, { expiresIn: jwtConfig.refreshToken });
+    const refreshToken = await sign(payload, jwtConfig.secret, { expiresIn: jwtConfig.refreshToken });
     return refreshToken;
   }
 }
