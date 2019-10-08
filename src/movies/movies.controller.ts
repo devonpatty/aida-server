@@ -1,4 +1,4 @@
-import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { SearchMoviesDto } from './dto/search-movies.dto';
 
@@ -9,7 +9,9 @@ export class MoviesController {
   ) {}
 
   @Get()
-  async searchMovies(@Query(ValidationPipe) searchMoviesDto: SearchMoviesDto): Promise<any> {
+  async searchMovies(
+    @Query(ValidationPipe) searchMoviesDto: SearchMoviesDto
+  ): Promise<any> {
     return this.moviesService.searchMovies(searchMoviesDto);
   }
   
