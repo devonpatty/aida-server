@@ -4,11 +4,13 @@ import { AuthService } from './auth.service';
 import { AuthFormDto } from './dto/auth-form.dto';
 import { Request, Response } from 'express';
 import { JwtPayload } from './jwt/jwt-payload.interface';
+import { TokenService } from '../token/token.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
   ) {}
 
   @Post('/signup')
@@ -49,7 +51,7 @@ export class AuthController {
 
     let payload: JwtPayload = null;
     try {
-      payload = await this.authService.verifyRefreshToken(token);
+      payload = await this.tokenService.verifyRefreshToken(token);
     } catch (error) {
       console.log(error);
       return res.send({ success: false, accessToken: '' });
@@ -72,7 +74,7 @@ export class AuthController {
       return res.send({ success: false, accessToken: '' });
     }
 
-    const refreshToken = await this.authService.createRefreshToken(x);
+    const refreshToken = await this.tokenService.createRefreshToken(x);
     // 7 * 24 * 60 * 60 * 1000 === 604800000, 7 days in milliseconds
     const duration = new Date(Number(new Date()) + 604800000);
 
@@ -85,6 +87,6 @@ export class AuthController {
       },
     );
 
-    return res.send({ success: true, accessToken: await this.authService.createAccessTokens(toUser) });
+    return res.send({ success: true, accessToken: await this.tokenService.createAccessTokens(toUser) });
   }
 }

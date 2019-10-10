@@ -1,5 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
+import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Injectable, UnauthorizedException} from '@nestjs/common';
 import { JwtPayload } from './jwt-payload.interface';
 import { InjectRepository } from '@nestjs/typeorm';

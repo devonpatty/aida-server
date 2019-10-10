@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { WatchlistTvsModule } from './watchlist-tvs/watchlist-tvs.module';
 import { TvsModule } from './tvs/tvs.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
     AuthModule,
     WatchlistTvsModule,
     TvsModule,
+    TokenModule,
   ],
 })
 export class AppModule /*implements NestModule*/ {
