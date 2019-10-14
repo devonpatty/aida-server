@@ -8,7 +8,7 @@ const jwtConfig = config.get('jwt');
 
 @Injectable()
 export class TokenService {
-  async verifyRefreshToken(token): Promise<any> {
+  async verifyRefreshToken(token: string): Promise<any> {
     return await verify(token, jwtConfig.refreshTokenSecret);
   }
 

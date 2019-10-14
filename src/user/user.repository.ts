@@ -30,13 +30,29 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  async changePassword(user: User, password: string, salt: string): Promise<any> {
+    const query = this.createQueryBuilder('user');
+
+    const newPassword = await this.hashPassword(password, salt);
+
+    await query
+      .update(user)
+      .set({ password: newPassword })
+      .where("userId = :userId", { userId: user.userId })
+      .execute();
+    
+    await this.incrementTokenVersion(user.userId);
+  }
+
   async validateUserPassword(authCredentialsDto: AuthCredentialsDto): Promise<any> {
     const { username, password } = authCredentialsDto;
     const user = await this.findOne({ username });
+
     const toResponse = {
       userId: user.userId,
       username: username,
       tokenVersion: user.tokenVersion,
+      salt: user.salt,
     };
 
     if (user && await user.validatePassword(password)) {
@@ -47,12 +63,12 @@ export class UserRepository extends Repository<User> {
   }
 
   // TO DO implement incrementTokenVersion
-  async incrementTokenVersion(userId): Promise<boolean> {
+  async incrementTokenVersion(userId: number): Promise<boolean> {
     await this.increment({ userId }, 'tokenVersion', 1);
     return true;
   }
 
-  private async hashPassword(password: string, salt: string): Promise<string> {
+  async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
   }
 }
